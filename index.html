@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>한글 놀이터 · 韩语小星星</title>
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap">
+<style>
+  :root{
+    --sun:#FFC94A;
+    --sun-deep:#F5A623;
+    --coral:#FF8A65;
+    --mint:#4FCB9B;
+    --mint-deep:#2BA87A;
+    --sky:#54C3F0;
+    --sky-deep:#2B9CD0;
+    --cream:#FFF8E9;
+    --ink:#33404F;
+    --ink-soft:#6B7A8C;
+    --white:#FFFFFF;
+    --card-shadow:0 6px 0 rgba(51,64,79,.10), 0 12px 24px rgba(51,64,79,.10);
+    --radius:22px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    font-family:"Noto Sans KR","Apple SD Gothic Neo","Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,-apple-system, sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 12% 8%, #FFF1C9 0%, transparent 42%),
+      radial-gradient(circle at 88% 4%, #D9F3FF 0%, transparent 38%),
+      radial-gradient(circle at 78% 92%, #DFFAEC 0%, transparent 40%),
+      var(--cream);
+    min-height:100%;
+    overflow-x:hidden;
+  }
+  /* ---------- 背景装饰 ---------- */
+  .bg-deco{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+  .bg-deco span{position:absolute;font-size:24px;opacity:.32;animation:float 9s ease-in-out infinite;}
+  @keyframes float{
+    0%,100%{transform:translateY(0) rotate(-6deg);}
+    50%{transform:translateY(-16px) rotate(6deg);}
+  }
+  .wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:14px 16px 40px;}
+
+  /* ---------- 顶栏 ---------- */
+  .topbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;min-height:48px;}
+  .btn-back{
+    border:none;background:var(--white);color:var(--ink);font-size:20px;font-weight:700;
+    width:46px;height:46px;border-radius:16px;box-shadow:0 4px 0 #E3E9F0;cursor:pointer;
+    display:none;align-items:center;justify-content:center;flex:0 0 auto;
+  }
+  .btn-back:active{transform:translateY(3px);box-shadow:0 1px 0 #E3E9F0;}
+  .brand{flex:1;font-weight:900;font-size:19px;letter-spacing:.5px;color:var(--ink);}
+  .brand small{display:block;font-size:11px;font-weight:400;color:var(--ink-soft);letter-spacing:1px;}
+  .stars-pill{
+    background:var(--white);border-radius:999px;padding:8px 16px;font-weight:900;font-size:16px;
+    box-shadow:0 4px 0 #E3E9F0;display:flex;align-items:center;gap:6px;flex:0 0 auto;
+  }
+  .stars-pill .n{color:var(--sun-deep);min-width:14px;text-align:center;}
+
+  /* ---------- 屏幕 ---------- */
+  .screen{display:none;animation:pop .32s cubic-bezier(.2,1.3,.4,1);}
+  .screen.on{display:block;}
+  @keyframes pop{from{opacity:.55;transform:translateY(10px);}to{opacity:1;transform:none;}}
+
+  /* ---------- 首页 ---------- */
+  .hero{text-align:center;padding:10px 0 6px;}
+  .hero h1{
+    margin:0;font-size:46px;line-height:1.15;font-weight:900;color:var(--ink);
+    text-shadow:0 4px 0 #FFE9AE;
+  }
+  .hero h2{margin:6px 0 0;font-size:19px;font-weight:700;color:var(--coral);}
+  .hero p{margin:8px 0 0;font-size:14px;color:var(--ink-soft);}
+  .mascot{
+    font-size:60px;display:inline-block;animation:bob 2.4s ease-in-out infinite;margin-bottom:-6px;
+  }
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg);}50%{transform:translateY(-10px) rotate(4deg);}}
+
+  .menu{display:grid;gap:14px;margin-top:18px;}
+  .menu-card{
+    position:relative;border:none;text-align:left;cursor:pointer;
+    display:flex;align-items:center;gap:16px;width:100%;
+    padding:20px 20px 20px 18px;border-radius:var(--radius);
+    background:var(--white);box-shadow:var(--card-shadow);
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .menu-card:active{transform:translateY(5px);box-shadow:0 2px 0 rgba(51,64,79,.12);}
+  .menu-card .ico{
+    width:70px;height:70px;flex:0 0 auto;border-radius:20px;display:flex;align-items:center;justify-content:center;
+    font-size:36px;
+  }
+  .menu-card h3{margin:0 0 4px;font-size:20px;font-weight:900;}
+  .menu-card p{margin:0;font-size:13px;color:var(--ink-soft);line-height:1.5;}
+  .menu-card .tag{
+    position:absolute;top:14px;right:16px;font-size:11px;font-weight:700;color:var(--white);
+    background:var(--mint);padding:3px 9px;border-radius:999px;
+  }
+  .ico.yellow{background:#FFF2CD;}
+  .ico-ko{font-size:36px;font-weight:900;color:#C08700;font-family:"Noto Sans KR","Apple SD Gothic Neo",sans-serif;}
+  .ico.mint{background:#DCF9EE;}
+  .ico.sky{background:#DCF1FB;}
+  .ico.coral{background:#FFE6DC;}
+
+  .sticker-board{
+    margin-top:20px;background:var(--white);border-radius:var(--radius);padding:16px 18px;
+    box-shadow:var(--card-shadow);
+  }
+  .sticker-board h4{margin:0 0 10px;font-size:15px;font-weight:900;display:flex;justify-content:space-between;align-items:center;}
+  .sticker-board h4 span{font-size:12px;font-weight:400;color:var(--ink-soft);}
+  .badges{display:flex;gap:10px;flex-wrap:wrap;}
+  .badge{
+    width:52px;height:52px;border-radius:16px;background:#F3F6FA;display:flex;align-items:center;justify-content:center;
+    font-size:24px;filter:grayscale(1);opacity:.55;
+  }
+  .badge.got{filter:none;opacity:1;background:#FFF2CD;box-shadow:0 3px 0 #F6DFA2;}
+
+  .parent-note{margin-top:16px;font-size:12px;color:var(--ink-soft);line-height:1.7;}
+  .parent-note b{color:var(--ink);}
+  .parent-note .toggle{
+    background:none;border:none;color:var(--sky-deep);font-weight:700;font-size:12px;cursor:pointer;padding:0;
+  }
+  .parent-note .body{display:none;background:rgba(255,255,255,.7);border-radius:14px;padding:10px 12px;margin-top:8px;}
+  .parent-note .body.on{display:block;}
+
+  /* ---------- 字母页 ---------- */
+  .seg{display:flex;gap:8px;background:var(--white);padding:6px;border-radius:999px;box-shadow:0 4px 0 #E3E9F0;margin-bottom:16px;}
+  .seg button{
+    flex:1;border:none;background:transparent;padding:10px 0;border-radius:999px;font-weight:900;font-size:15px;
+    color:var(--ink-soft);cursor:pointer;font-family:inherit;
+  }
+  .seg button.on{background:var(--sun);color:#fff;box-shadow:0 3px 0 var(--sun-deep);}
+  .letter-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  .letter-card{
+    border:none;cursor:pointer;background:var(--white);border-radius:18px;padding:14px 4px 10px;
+    box-shadow:0 5px 0 #E7EDF4;display:flex;flex-direction:column;align-items:center;gap:2px;
+    font-family:inherit;transition:transform .1s;
+  }
+  .letter-card:active{transform:translateY(4px);box-shadow:0 1px 0 #E7EDF4;}
+  .letter-card .L{font-size:32px;font-weight:900;line-height:1.1;font-family:"Noto Sans KR","Apple SD Gothic Neo",sans-serif;}
+  .letter-card .E{font-size:20px;}
+  .letter-card .N{font-size:11px;color:var(--ink-soft);font-weight:700;}
+
+  /* ---------- 听音页 ---------- */
+  .quiz-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:13px;font-weight:700;color:var(--ink-soft);}
+  .progress{height:10px;background:var(--white);border-radius:999px;box-shadow:inset 0 2px 4px rgba(51,64,79,.08);overflow:hidden;margin-bottom:20px;}
+  .progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--sun),var(--coral));border-radius:999px;transition:width .4s ease;}
+  .speaker-zone{text-align:center;margin:8px 0 18px;}
+  .btn-speaker{
+    width:118px;height:118px;border-radius:50%;border:none;cursor:pointer;font-size:50px;
+    background:linear-gradient(180deg,#FFE59B,#FFC94A);
+    box-shadow:0 8px 0 var(--sun-deep), 0 14px 26px rgba(245,166,35,.35);
+    display:inline-flex;align-items:center;justify-content:center;
+    font-family:inherit;color:#5C3D00;
+  }
+  .btn-speaker:active{transform:translateY(6px);box-shadow:0 2px 0 var(--sun-deep);}
+  .btn-speaker.pulse{animation:ring 1.6s ease-in-out infinite;}
+  @keyframes ring{0%,100%{box-shadow:0 8px 0 var(--sun-deep), 0 0 0 0 rgba(255,201,74,.5);}50%{box-shadow:0 8px 0 var(--sun-deep), 0 0 0 18px rgba(255,201,74,0);}}
+  .speaker-zone .hint{margin-top:12px;font-size:13px;color:var(--ink-soft);}
+
+  .options{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .opt{
+    border:none;cursor:pointer;background:var(--white);border-radius:20px;padding:16px 10px;
+    box-shadow:0 5px 0 #E7EDF4;display:flex;flex-direction:column;align-items:center;gap:4px;
+    font-family:inherit;transition:transform .1s;
+  }
+  .opt:active{transform:translateY(4px);box-shadow:0 1px 0 #E7EDF4;}
+  .opt .emoji{font-size:46px;line-height:1.1;}
+  .opt .ko{font-size:17px;font-weight:900;letter-spacing:.5px;}
+  .opt.right{background:#E3FAF0;box-shadow:0 5px 0 var(--mint);animation:rightPop .45s;}
+  .opt.wrong{animation:shake .4s;background:#FFEDE7;box-shadow:0 5px 0 var(--coral);}
+  .opt.dim{opacity:.45;}
+  @keyframes rightPop{0%{transform:scale(1);}45%{transform:scale(1.06);}100%{transform:scale(1);}}
+  @keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}40%{transform:translateX(8px);}60%{transform:translateX(-5px);}80%{transform:translateX(5px);}}
+
+  .toast{
+    position:fixed;left:50%;bottom:34px;transform:translate(-50%,20px);opacity:0;
+    background:var(--ink);color:#fff;font-weight:900;font-size:17px;padding:12px 26px;border-radius:999px;
+    pointer-events:none;transition:.28s;z-index:60;box-shadow:0 10px 24px rgba(0,0,0,.2);
+  }
+  .toast.on{opacity:1;transform:translate(-50%,0);}
+
+  /* ---------- 配对页 ---------- */
+  .match-info{display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--ink-soft);margin-bottom:12px;}
+  .match-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+  .mcard{position:relative;aspect-ratio:1/1.15;border:none;background:none;padding:0;cursor:pointer;font-family:inherit;}
+  .mcard .inner{position:absolute;inset:0;}
+  .face{
+    position:absolute;inset:0;border-radius:16px;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 5px 0 #E1E8F0;
+    transition:transform .3s ease, opacity .25s ease;
+  }
+  .face.back{background:linear-gradient(150deg,#8FD8FF,#54C3F0);color:#fff;font-size:24px;font-weight:900;opacity:1;transform:scale(1);}
+  .face.front{background:var(--white);flex-direction:column;gap:2px;opacity:0;visibility:hidden;transform:scale(.82);padding:4px;}
+  .mcard.flip .face.back{opacity:0;visibility:hidden;transform:scale(.82);}
+  .mcard.flip .face.front{opacity:1;visibility:visible;transform:scale(1);}
+  .face.front .f-emoji{font-size:38px;line-height:1.1;}
+  .face.front .f-word{font-size:15px;font-weight:900;letter-spacing:.5px;line-height:1.25;word-break:keep-all;}
+  .mcard.done .face.front{background:#E3FAF0;box-shadow:0 5px 0 var(--mint);}
+  .mcard.done{pointer-events:none;opacity:.92;}
+
+  /* ---------- 弹窗 ---------- */
+  .modal{
+    position:fixed;inset:0;z-index:80;display:none;align-items:flex-end;justify-content:center;
+    background:rgba(30,41,54,.45);backdrop-filter:blur(3px);padding:0;
+  }
+  .modal.on{display:flex;}
+  .sheet{
+    background:var(--white);width:100%;max-width:520px;border-radius:28px 28px 0 0;padding:24px 22px 30px;
+    text-align:center;animation:sheetUp .32s cubic-bezier(.2,1.2,.4,1);max-height:88vh;overflow:auto;
+  }
+  @media(min-width:560px){
+    .modal{align-items:center;}
+    .sheet{border-radius:28px;}
+  }
+  @keyframes sheetUp{from{transform:translateY(40px);opacity:0;}to{transform:none;opacity:1;}}
+  .sheet .big-letter{font-size:88px;font-weight:900;line-height:1;letter-spacing:4px;color:var(--ink);}
+  .sheet .name-row{display:flex;justify-content:center;gap:10px;margin-top:10px;font-size:14px;font-weight:700;color:var(--ink-soft);}
+  .sheet .name-row b{color:var(--coral);}
+  .word-box{
+    margin-top:18px;background:#FFF8E9;border-radius:20px;padding:18px;display:flex;align-items:center;justify-content:center;gap:16px;
+  }
+  .word-box .we{font-size:46px;}
+  .word-box .wt{text-align:left;}
+  .word-box .wt .ko{font-size:26px;font-weight:900;letter-spacing:1px;}
+  .word-box .wt .zh{font-size:14px;color:var(--ink-soft);margin-top:2px;}
+  .sheet .btn-row{display:flex;gap:10px;margin-top:22px;}
+  .btn{
+    flex:1;border:none;cursor:pointer;padding:16px 10px;border-radius:18px;font-size:16px;font-weight:900;
+    font-family:inherit;color:#fff;background:var(--mint);box-shadow:0 5px 0 var(--mint-deep);
+  }
+  .btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--mint-deep);}
+  .btn.alt{background:var(--sky);box-shadow:0 5px 0 var(--sky-deep);}
+  .btn.alt:active{box-shadow:0 1px 0 var(--sky-deep);}
+  .btn.ghost{background:#EEF2F7;color:var(--ink);box-shadow:0 5px 0 #D9E1EA;}
+  .btn.ghost:active{box-shadow:0 1px 0 #D9E1EA;}
+
+  .result{padding:6px 0 2px;}
+  .result .emoji{font-size:64px;animation:bob 1.8s ease-in-out infinite;}
+  .result h3{margin:6px 0 4px;font-size:24px;font-weight:900;}
+  .result p{margin:0;font-size:14px;color:var(--ink-soft);}
+
+  @media(max-width:380px){
+    .hero h1{font-size:38px;}
+    .letter-grid{grid-template-columns:repeat(4,1fr);gap:8px;}
+    .letter-card .L{font-size:26px;}
+    .menu-card .ico{width:58px;height:58px;font-size:30px;}
+    .opt .emoji{font-size:40px;}
+  }
+</style>
+</head>
+<body>
+<div class="bg-deco" id="deco"></div>
+
+<div class="wrap">
+  <div class="topbar">
+    <button class="btn-back" id="backBtn" aria-label="返回">←</button>
+    <div class="brand">한글 놀이터<small>韩语小星星 · 5岁启蒙版</small></div>
+    <div class="stars-pill">⭐ <span class="n" id="starCount">0</span></div>
+  </div>
+
+  <!-- ===== 视图：首页 ===== -->
+  <section class="screen on" id="screen-home">
+    <div class="hero">
+      <span class="mascot">🐣</span>
+      <h1>한글 놀이터</h1>
+      <h2>乐乐，一起玩韩语吧！</h2>
+      <p>听一听 · 认一认 · 记一记，每答对一次得一颗小星星</p>
+    </div>
+
+    <div class="menu">
+      <button class="menu-card" data-go="letters">
+        <div class="ico yellow ico-ko">가</div>
+        <div>
+          <h3>字母乐园</h3>
+          <p>点一点韩文字母，听名字和例句</p>
+        </div>
+        <span class="tag">24 个</span>
+      </button>
+      <button class="menu-card" data-go="listen">
+        <div class="ico mint">👂</div>
+        <div>
+          <h3>听音找一找</h3>
+          <p>听韩语，选出对应的小图片</p>
+        </div>
+        <span class="tag">10 题</span>
+      </button>
+      <button class="menu-card" data-go="match">
+        <div class="ico sky">🃏</div>
+        <div>
+          <h3>记忆翻翻卡</h3>
+          <p>翻牌配对：图片和韩语单词</p>
+        </div>
+        <span class="tag">6 对</span>
+      </button>
+    </div>
+
+    <div class="sticker-board">
+      <h4>我的星星收集 <span id="starTip">再得 3 颗就有新徽章</span></h4>
+      <div class="badges" id="badges">
+        <div class="badge" data-need="0">🌱</div>
+        <div class="badge" data-need="5">🍎</div>
+        <div class="badge" data-need="12">🐣</div>
+        <div class="badge" data-need="20">🐰</div>
+        <div class="badge" data-need="30">🌈</div>
+      </div>
+    </div>
+
+    <div class="parent-note">
+      <button class="toggle" id="noteToggle">家长小贴士 ▾</button>
+      <div class="body" id="noteBody">
+        <b>怎么用：</b>建议每次 5–10 分钟，一天玩 1–2 轮就好，别刷题。<br>
+        <b>发音：</b>点 🔈 会调用设备自带韩语语音；若无声音，去系统设置里安装「韩语 / 한국어」语音包，或换用 iPad / iPhone 的 Safari 打开。<br>
+        <b>目标：</b>5 岁阶段重点是「听得出、敢开口」，不要求认全字母、更不要求默写。<br>
+        <b>陪玩：</b>孩子选对时一起跟读一遍，比单纯点屏幕有效得多。
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 视图：字母乐园 ===== -->
+  <section class="screen" id="screen-letters">
+    <div class="seg">
+      <button class="on" data-type="con">자음 辅音</button>
+      <button data-type="vow">모음 元音</button>
+    </div>
+    <div class="letter-grid" id="letterGrid"></div>
+  </section>
+
+  <!-- ===== 视图：听音找一找 ===== -->
+  <section class="screen" id="screen-listen">
+    <div class="quiz-head">
+      <span id="qIndex">第 1 / 10 题</span>
+      <span id="qScore">本轮 ⭐ 0</span>
+    </div>
+    <div class="progress"><i id="qBar"></i></div>
+
+    <div class="speaker-zone">
+      <button class="btn-speaker pulse" id="playBtn" aria-label="播放发音">🔈</button>
+      <div class="hint" id="playHint">点喇叭，再听一遍</div>
+    </div>
+
+    <div class="options" id="options"></div>
+  </section>
+
+  <!-- ===== 视图：记忆翻翻卡 ===== -->
+  <section class="screen" id="screen-match">
+    <div class="match-info">
+      <span id="matchMoves">翻牌 0 次</span>
+      <span id="matchPairs">已配对 0 / 6</span>
+    </div>
+    <div class="match-grid" id="matchGrid"></div>
+  </section>
+</div>
+
+<!-- ===== 弹窗：字母详情 ===== -->
+<div class="modal" id="letterModal">
+  <div class="sheet">
+    <div class="big-letter" id="mLetter">ㄱ</div>
+    <div class="name-row"><span>名称 <b id="mName">기역</b></span><span>发音 <b id="mRom">g / k</b></span></div>
+    <div class="word-box">
+      <div class="we" id="mEmoji">🐱</div>
+      <div class="wt">
+        <div class="ko" id="mWord">고양이</div>
+        <div class="zh" id="mZh">猫</div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn alt" id="mReplay">🔈 再听一次</button>
+      <button class="btn ghost" id="mClose">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 弹窗：结果 ===== -->
+<div class="modal" id="resultModal">
+  <div class="sheet">
+    <div class="result">
+      <div class="emoji" id="rEmoji">🎉</div>
+      <h3 id="rTitle">太棒了！</h3>
+      <p id="rDesc">这一轮得到 0 颗小星星</p>
+    </div>
+    <div class="btn-row">
+      <button class="btn" id="rAgain">再玩一次</button>
+      <button class="btn ghost" id="rHome">回首页</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   数据
+   ========================================================= */
+const CONSONANTS = [
+  {ch:'ㄱ', name:'기역', rom:'g / k', word:'고양이', zh:'猫',   emoji:'🐱'},
+  {ch:'ㄴ', name:'니은', rom:'n',     word:'나무',   zh:'树',   emoji:'🌳'},
+  {ch:'ㄷ', name:'디귿', rom:'d',     word:'달',     zh:'月亮', emoji:'🌙'},
+  {ch:'ㄹ', name:'리을', rom:'r / l', word:'라면',   zh:'拉面', emoji:'🍜'},
+  {ch:'ㅁ', name:'미음', rom:'m',     word:'물',     zh:'水',   emoji:'💧'},
+  {ch:'ㅂ', name:'비읍', rom:'b',     word:'바나나', zh:'香蕉', emoji:'🍌'},
+  {ch:'ㅅ', name:'시옷', rom:'s',     word:'사과',   zh:'苹果', emoji:'🍎'},
+  {ch:'ㅇ', name:'이응', rom:'不发音 / ng', word:'아이', zh:'小孩', emoji:'👶'},
+  {ch:'ㅈ', name:'지읒', rom:'j',     word:'집',     zh:'房子', emoji:'🏠'},
+  {ch:'ㅊ', name:'치읓', rom:'ch',    word:'책',     zh:'书',   emoji:'📖'},
+  {ch:'ㅋ', name:'키읔', rom:'k',     word:'코',     zh:'鼻子', emoji:'👃'},
+  {ch:'ㅌ', name:'티읕', rom:'t',     word:'토끼',   zh:'兔子', emoji:'🐰'},
+  {ch:'ㅍ', name:'피읖', rom:'p',     word:'포도',   zh:'葡萄', emoji:'🍇'},
+  {ch:'ㅎ', name:'히읗', rom:'h',     word:'하트',   zh:'爱心', emoji:'❤️'}
+];
+
+const VOWELS = [
+  {ch:'ㅏ', name:'아', rom:'a',   word:'아빠', zh:'爸爸', emoji:'👨'},
+  {ch:'ㅑ', name:'야', rom:'ya',  word:'야구', zh:'棒球', emoji:'⚾'},
+  {ch:'ㅓ', name:'어', rom:'eo',  word:'언니', zh:'姐姐', emoji:'👧'},
+  {ch:'ㅕ', name:'여', rom:'yeo', word:'여우', zh:'狐狸', emoji:'🦊'},
+  {ch:'ㅗ', name:'오', rom:'o',   word:'오리', zh:'鸭子', emoji:'🦆'},
+  {ch:'ㅛ', name:'요', rom:'yo',  word:'요리', zh:'料理', emoji:'🍳'},
+  {ch:'ㅜ', name:'우', rom:'u',   word:'우유', zh:'牛奶', emoji:'🥛'},
+  {ch:'ㅠ', name:'유', rom:'yu',  word:'유니콘', zh:'独角兽', emoji:'🦄'},
+  {ch:'ㅡ', name:'으', rom:'eu',  word:'그림', zh:'图画', emoji:'🖼️'},
+  {ch:'ㅣ', name:'이', rom:'i',   word:'이불', zh:'被子', emoji:'🛏️'}
+];
+
+const WORDS = [
+  {ko:'사과',   zh:'苹果',   emoji:'🍎'},
+  {ko:'바나나', zh:'香蕉',   emoji:'🍌'},
+  {ko:'고양이', zh:'猫',     emoji:'🐱'},
+  {ko:'강아지', zh:'小狗',   emoji:'🐶'},
+  {ko:'토끼',   zh:'兔子',   emoji:'🐰'},
+  {ko:'우유',   zh:'牛奶',   emoji:'🥛'},
+  {ko:'별',     zh:'星星',   emoji:'⭐'},
+  {ko:'물',     zh:'水',     emoji:'💧'},
+  {ko:'책',     zh:'书',     emoji:'📖'},
+  {ko:'자동차', zh:'汽车',   emoji:'🚗'},
+  {ko:'엄마',   zh:'妈妈',   emoji:'👩'},
+  {ko:'아빠',   zh:'爸爸',   emoji:'👨'},
+  {ko:'사탕',   zh:'糖果',   emoji:'🍬'},
+  {ko:'사랑',   zh:'爱',     emoji:'❤️'},
+  {ko:'밥',     zh:'饭',     emoji:'🍚'},
+  {ko:'공',     zh:'球',     emoji:'⚽'}
+];
+
+/* =========================================================
+   状态
+   ========================================================= */
+const state = {
+  stars: Number(localStorage.getItem('hangulStars') || 0),
+  letterType: 'con',
+  quiz: {list:[], idx:0, score:0, locked:false},
+  match: {first:null, moves:0, pairs:0, locked:false, deck:[]}
+};
+
+/* =========================================================
+   语音引擎
+   ========================================================= */
+let koVoice = null;
+let voiceReady = false;
+let ttsUnlocked = false;
+
+function refreshVoice(){
+  if (!('speechSynthesis' in window)) return;
+  const voices = speechSynthesis.getVoices() || [];
+  const ko = voices.filter(v => /ko/i.test(v.lang || '') || /korean|한국|yuna/i.test(v.name || ''));
+  if (ko.length){
+    koVoice = ko.find(v => v.localService) || ko[0];
+    voiceReady = true;
+  }
+}
+if ('speechSynthesis' in window){
+  refreshVoice();
+  speechSynthesis.onvoiceschanged = refreshVoice;
+  // 有些浏览器首帧拿不到 voices
+  setTimeout(refreshVoice, 500);
+  setTimeout(refreshVoice, 1500);
+}
+
+function speak(text, opts){
+  const o = Object.assign({rate:0.85, pitch:1.05}, opts || {});
+  if (!('speechSynthesis' in window)) return false;
+  refreshVoice();
+  try{ speechSynthesis.cancel(); }catch(e){}
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'ko-KR';
+  u.rate = o.rate;
+  u.pitch = o.pitch;
+  if (koVoice){
+    u.voice = koVoice;
+    try{ speechSynthesis.speak(u); return true; }catch(e){}
+  }
+  // 没有韩语语音包时：不强行用中文音色念韩文（会读错），保持安静并提示
+  return false;
+}
+
+/* =========================================================
+   音效（WebAudio，无需素材）
+   ========================================================= */
+let actx = null;
+function ensureAudio(){
+  if (!actx){
+    const C = window.AudioContext || window.webkitAudioContext;
+    if (C) actx = new C();
+  }
+  if (actx && actx.state === 'suspended') actx.resume();
+}
+function tone(freq, dur, delay, type){
+  if (!actx) return;
+  const t0 = actx.currentTime + (delay || 0);
+  const osc = actx.createOscillator();
+  const g = actx.createGain();
+  osc.type = type || 'sine';
+  osc.frequency.setValueAtTime(freq, t0);
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(0.22, t0 + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  osc.connect(g).connect(actx.destination);
+  osc.start(t0);
+  osc.stop(t0 + dur + 0.02);
+}
+function sfx(kind){
+  ensureAudio();
+  if (!actx) return;
+  if (kind === 'ok'){ tone(660,0.16,0); tone(880,0.18,0.13); tone(1180,0.22,0.27); }
+  else if (kind === 'no'){ tone(300,0.16,0,  'triangle'); tone(230,0.2,0.14,'triangle'); }
+  else if (kind === 'tap'){ tone(520,0.08,0,'sine'); }
+  else if (kind === 'win'){ tone(523,0.14,0); tone(659,0.14,0.14); tone(784,0.14,0.28); tone(1046,0.3,0.42); }
+}
+
+/* =========================================================
+   通用 UI
+   ========================================================= */
+const $ = id => document.getElementById(id);
+const toastEl = $('toast');
+let toastTimer = null;
+function toast(msg){
+  toastEl.textContent = msg;
+  toastEl.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> toastEl.classList.remove('on'), 1500);
+}
+
+function renderStars(){
+  $('starCount').textContent = state.stars;
+  document.querySelectorAll('.badge').forEach(b=>{
+    b.classList.toggle('got', state.stars >= Number(b.dataset.need));
+  });
+  const next = document.querySelector('.badge:not(.got)');
+  $('starTip').textContent = next
+    ? `再得 ${Number(next.dataset.need) - state.stars} 颗就有新徽章`
+    : '徽章全部集齐啦！';
+}
+function addStar(n){
+  state.stars += n;
+  localStorage.setItem('hangulStars', state.stars);
+  renderStars();
+}
+
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  $('screen-' + name).classList.add('on');
+  $('backBtn').style.display = name === 'home' ? 'none' : 'flex';
+  window.scrollTo({top:0, behavior:'smooth'});
+  if (name === 'listen') startQuiz();
+  if (name === 'match') startMatch();
+}
+
+/* 背景飘浮装饰 */
+(function buildDeco(){
+  const emojis = ['⭐','🍎','🐰','🌈','🍌','🐣','🍬','💧','🌙','🦊'];
+  const deco = $('deco');
+  for (let i = 0; i < 10; i++){
+    const s = document.createElement('span');
+    s.textContent = emojis[i % emojis.length];
+    // 只放在页面两侧窄带里，避免压住正文和卡片
+    s.style.left = (i % 2 === 0
+      ? (Math.random() * 6) + '%'
+      : (90 + Math.random() * 8) + '%');
+    s.style.top = (Math.random() * 88 + 4) + '%';
+    s.style.fontSize = (16 + Math.random()*16) + 'px';
+    s.style.animationDelay = (Math.random()*6) + 's';
+    s.style.animationDuration = (7 + Math.random()*6) + 's';
+    deco.appendChild(s);
+  }
+})();
+
+/* =========================================================
+   首页交互
+   ========================================================= */
+document.querySelectorAll('.menu-card').forEach(card=>{
+  card.addEventListener('click', ()=>{
+    ensureAudio(); sfx('tap');
+    showScreen(card.dataset.go);
+  });
+});
+$('backBtn').addEventListener('click', ()=>{
+  ensureAudio(); sfx('tap');
+  speechSynthesis && speechSynthesis.cancel && speechSynthesis.cancel();
+  showScreen('home');
+});
+$('noteToggle').addEventListener('click', ()=>{
+  $('noteBody').classList.toggle('on');
+});
+
+/* =========================================================
+   字母乐园
+   ========================================================= */
+function renderLetters(){
+  const data = state.letterType === 'con' ? CONSONANTS : VOWELS;
+  const grid = $('letterGrid');
+  grid.innerHTML = '';
+  data.forEach(item=>{
+    const b = document.createElement('button');
+    b.className = 'letter-card';
+    b.innerHTML = `<div class="L">${item.ch}</div><div class="E">${item.emoji}</div><div class="N">${item.name}</div>`;
+    b.addEventListener('click', ()=> openLetter(item));
+    grid.appendChild(b);
+  });
+}
+document.querySelectorAll('.seg button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.seg button').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    state.letterType = btn.dataset.type;
+    sfx('tap');
+    renderLetters();
+  });
+});
+
+let currentLetter = null;
+function openLetter(item){
+  currentLetter = item;
+  ensureAudio();
+  sfx('tap');
+  $('mLetter').textContent = item.ch;
+  $('mName').textContent = item.name;
+  $('mRom').textContent = item.rom;
+  $('mEmoji').textContent = item.emoji;
+  $('mWord').textContent = item.word;
+  $('mZh').textContent = item.zh;
+  $('letterModal').classList.add('on');
+  const spoke = speak(item.name + '. ' + item.word, {rate:0.8});
+  if (!spoke) showVoiceTip();
+}
+function showVoiceTip(){
+  toast('没听到声音？右上角「家长小贴士」里有办法');
+}
+$('mReplay').addEventListener('click', ()=>{
+  if (!currentLetter) return;
+  const ok = speak(currentLetter.name + '. ' + currentLetter.word, {rate:0.75});
+  if (!ok) toast('当前设备没装韩语语音包');
+});
+$('mClose').addEventListener('click', ()=>{
+  $('letterModal').classList.remove('on');
+  try{ speechSynthesis.cancel(); }catch(e){}
+});
+$('letterModal').addEventListener('click', e=>{
+  if (e.target === $('letterModal')) $('mClose').click();
+});
+
+/* =========================================================
+   听音找一找
+   ========================================================= */
+const QUIZ_LEN = 10;
+function pickN(arr, n){
+  const pool = arr.slice();
+  const out = [];
+  while (out.length < n && pool.length){
+    out.push(pool.splice(Math.floor(Math.random()*pool.length), 1)[0]);
+  }
+  return out;
+}
+
+function startQuiz(){
+  state.quiz.list = pickN(WORDS, QUIZ_LEN);
+  state.quiz.idx = 0;
+  state.quiz.score = 0;
+  state.quiz.locked = false;
+  renderQuiz();
+}
+
+function renderQuiz(){
+  const q = state.quiz;
+  const target = q.list[q.idx];
+  $('qIndex').textContent = `第 ${q.idx + 1} / ${QUIZ_LEN} 题`;
+  $('qScore').textContent = `本轮 ⭐ ${q.score}`;
+  $('qBar').style.width = ((q.idx) / QUIZ_LEN * 100) + '%';
+  $('qScore').dataset.score = q.score;
+
+  // 干扰项：取 3 个与答案不同的词
+  const others = pickN(WORDS.filter(w => w.ko !== target.ko), 3);
+  const opts = pickN([target, ...others], 4);
+  const box = $('options');
+  box.innerHTML = '';
+  opts.forEach(w=>{
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.innerHTML = `<div class="emoji">${w.emoji}</div><div class="ko">${w.ko}</div>`;
+    b.dataset.ko = w.ko;
+    b.addEventListener('click', ()=> answer(b, w, target));
+    box.appendChild(b);
+  });
+
+  // 自动播放
+  setTimeout(()=> playCurrent(), 380);
+}
+
+function playCurrent(){
+  const q = state.quiz;
+  if (q.idx >= q.list.length) return;
+  const target = q.list[q.idx];
+  const ok = speak(target.ko, {rate:0.8});
+  const btn = $('playBtn');
+  btn.classList.remove('pulse');
+  void btn.offsetWidth;
+  btn.classList.add('pulse');
+  $('playHint').textContent = ok ? '点喇叭，再听一遍' : '这台设备没有韩语发音，先看下面的单词吧';
+}
+$('playBtn').addEventListener('click', ()=>{
+  ensureAudio();
+  playCurrent();
+});
+
+function answer(btn, word, target){
+  const q = state.quiz;
+  if (q.locked) return;
+  if (word.ko === target.ko){
+    q.locked = true;
+    sfx('ok');
+    btn.classList.add('right');
+    addStar(1);
+    q.score += 1;
+    $('qScore').textContent = `本轮 ⭐ ${q.score}`;
+    speak(target.ko + '. ' + target.zh, {rate:0.8});
+    setTimeout(()=>{
+      q.locked = false;
+      q.idx += 1;
+      if (q.idx >= QUIZ_LEN){
+        $('qBar').style.width = '100%';
+        finishQuiz();
+      } else {
+        renderQuiz();
+      }
+    }, 900);
+  } else {
+    sfx('no');
+    btn.classList.add('wrong');
+    setTimeout(()=> btn.classList.remove('wrong'), 420);
+  }
+}
+
+function finishQuiz(){
+  const score = state.quiz.score;
+  sfx('win');
+  $('rEmoji').textContent = score >= 8 ? '🏆' : score >= 5 ? '🎉' : '🌱';
+  $('rTitle').textContent = score >= 8 ? '听力小超人！' : score >= 5 ? '很不错哦！' : '再来一次更棒';
+  $('rDesc').textContent = `这一轮答对 ${score} / ${QUIZ_LEN} 题`;
+  $('resultModal').classList.add('on');
+}
+
+/* =========================================================
+   记忆翻翻卡
+   ========================================================= */
+function startMatch(){
+  const m = state.match;
+  m.first = null; m.moves = 0; m.pairs = 0; m.locked = false;
+  const words = pickN(WORDS, 6);
+  m.deck = [];
+  words.forEach((w, i)=>{
+    m.deck.push({id:i, kind:'emoji', face:w.emoji, word:w.ko});
+    m.deck.push({id:i, kind:'ko',    face:w.ko,    word:w.ko});
+  });
+  m.deck.sort(()=> Math.random() - 0.5);
+  $('matchMoves').textContent = '翻牌 0 次';
+  $('matchPairs').textContent = '已配对 0 / 6';
+  renderMatch();
+}
+
+function renderMatch(){
+  const grid = $('matchGrid');
+  grid.innerHTML = '';
+  state.match.deck.forEach((c, i)=>{
+    const b = document.createElement('button');
+    b.className = 'mcard';
+    b.dataset.i = i;
+    const front = c.kind === 'emoji'
+      ? `<div class="f-emoji">${c.face}</div>`
+      : `<div class="f-word">${c.face}</div>`;
+    b.innerHTML = `
+      <div class="inner">
+        <div class="face back">한글</div>
+        <div class="face front">${front}</div>
+      </div>`;
+    b.addEventListener('click', ()=> flipCard(b, c));
+    grid.appendChild(b);
+  });
+}
+
+function flipCard(btn, card){
+  const m = state.match;
+  if (m.locked) return;
+  if (btn.classList.contains('flip') || btn.classList.contains('done')) return;
+  ensureAudio(); sfx('tap');
+  btn.classList.add('flip');
+
+  if (!m.first){
+    m.first = {btn, card};
+    if (card.kind === 'ko') speak(card.word, {rate:0.8});
+    return;
+  }
+  m.moves += 1;
+  $('matchMoves').textContent = `翻牌 ${m.moves} 次`;
+
+  const second = {btn, card};
+  const first = m.first;
+  m.first = null;
+
+  if (first.card.id === second.card.id && first.card.kind !== second.card.kind){
+    // 配对成功
+    sfx('ok');
+    setTimeout(()=>{
+      first.btn.classList.add('done');
+      second.btn.classList.add('done');
+      m.pairs += 1;
+      $('matchPairs').textContent = `已配对 ${m.pairs} / 6`;
+      addStar(1);
+      speak(card.word, {rate:0.8});
+      if (m.pairs === 6) setTimeout(finishMatch, 900);
+    }, 320);
+  } else {
+    m.locked = true;
+    sfx('no');
+    setTimeout(()=>{
+      first.btn.classList.remove('flip');
+      second.btn.classList.remove('flip');
+      m.locked = false;
+    }, 780);
+  }
+}
+
+function finishMatch(){
+  sfx('win');
+  $('rEmoji').textContent = state.match.moves <= 10 ? '🏆' : '🎉';
+  $('rTitle').textContent = state.match.moves <= 10 ? '超强记忆力！' : '全部配对成功！';
+  $('rDesc').textContent = `用了 ${state.match.moves} 次翻牌，得到 6 颗星星`;
+  $('resultModal').classList.add('on');
+}
+
+/* =========================================================
+   结果弹窗
+   ========================================================= */
+$('rAgain').addEventListener('click', ()=>{
+  $('resultModal').classList.remove('on');
+  if ($('screen-listen').classList.contains('on')) startQuiz();
+  else if ($('screen-match').classList.contains('on')) startMatch();
+});
+$('rHome').addEventListener('click', ()=>{
+  $('resultModal').classList.remove('on');
+  showScreen('home');
+});
+
+/* =========================================================
+   初始化
+   ========================================================= */
+renderLetters();
+renderStars();
+
+// 预热语音：首次任意点击时解锁 AudioContext
+document.addEventListener('pointerdown', function once(){
+  ensureAudio();
+  refreshVoice();
+  document.removeEventListener('pointerdown', once);
+}, {once:true});
+</script>
+</body>
+</html>
